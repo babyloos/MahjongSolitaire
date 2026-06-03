@@ -1,9 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef }, { useEffect, useRef } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, Modal, ScrollView,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useGameStore, showHint } from '../store/gameStore';
+import { playSound } from '../utils/sounds';
+import { loadInterstitial, showInterstitialIfReady } from '../utils/ads';
 import { GameBoard } from '../components/GameBoard';
 import { BG, SURFACE, ACCENT, TEXT, TEXT_DIM } from '../constants/theme';
 import { t } from '../i18n';
@@ -14,6 +16,25 @@ type Props = {
 
 export function GameScreen({ navigation }: Props) {
   const { tiles, hintIds, pairsRemoved, isOver, isWon, elapsedSec, start, tap, shuffle, tick } = useGameStore();
+
+  const levelsSinceAd = useRef(0);
+  const prevWon = useRef(false);
+  const prevLose = useRef(false);
+
+  useEffect(() => { loadInterstitial(); }, []);
+  useEffect(() => {
+    if (isWon && !prevWon.current) {
+      playSound('win');
+      levelsSinceAd.current += 1;
+      if (levelsSinceAd.current >= 3) { levelsSinceAd.current = 0; showInterstitialIfReady(); }
+    }
+    prevWon.current = isWon;
+  }, [isWon]);
+  useEffect(() => {
+    if (isOver && !prevLose.current) playSound('error');
+    prevLose.current = isOver;
+  }, [isOver]);
+
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
