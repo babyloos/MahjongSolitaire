@@ -32,6 +32,11 @@
       "eas": {
         "projectId": "dd843cd1-fc7e-4da6-ac86-5cdfd52f9221"
       }
-    }
+    },
+    "plugins": [
+      ["expo-build-properties", {"android": {"enableProguardInReleaseBuilds": true}}],
+      ["react-native-google-mobile-ads", {"androidAppId": "ca-app-pub-3940256099942544~3347511713", "iosAppId": "ca-app-pub-3940256099942544~1458002511"}],
+      ["expo-audio", {}]
+    ]
   }
 }

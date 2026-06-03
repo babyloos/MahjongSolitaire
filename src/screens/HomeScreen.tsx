@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useGameStore } from '../store/gameStore';
+import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
+import { BANNER_AD_UNIT_ID } from '../utils/ads';
+import { initSounds } from '../utils/sounds';
 import { BG, SURFACE, ACCENT, TEXT, TEXT_DIM } from '../constants/theme';
 import { t } from '../i18n';
 
@@ -49,6 +52,7 @@ export function HomeScreen({ navigation }: Props) {
           <Text style={styles.bestValue}>{formatTime(bestSec)}</Text>
         </View>
       )}
+      <BannerAd unitId={BANNER_AD_UNIT_ID} size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} />
     </View>
   );
 }
